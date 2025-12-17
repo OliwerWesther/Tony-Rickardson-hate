@@ -4,7 +4,7 @@ public class Interactible : MonoBehaviour
 {
     [SerializeField] public bool carColider = false;
 
-    public GameObject SelectedObject;
+   GameObject SelectedObject;
 
     public KeyCode interactKey = KeyCode.F;
 
@@ -13,7 +13,8 @@ public class Interactible : MonoBehaviour
 
     private void Start()
     {
-        SelectedObject.SetActive(true);
+        carMovement = GetComponent<CarMovement>();
+        SelectedObject = FindAnyObjectByType<PlayerMovement>().gameObject;
     }
         
     private void Update()
@@ -21,7 +22,7 @@ public class Interactible : MonoBehaviour
         if (Input.GetKeyDown(interactKey) && carColider)
         {
             SelectedObject.SetActive(false);
-            CarMovement carMovement = GetComponent<CarMovement>();
+            print(SelectedObject.name);
             carMovement.insideCar = true;
 
             SelectedObject.transform.SetParent(transform, true);
@@ -29,7 +30,6 @@ public class Interactible : MonoBehaviour
         else if (Input.GetKeyDown(interactKey))
         {
             SelectedObject.SetActive(true);
-            CarMovement carMovement = GetComponent<CarMovement>();
             carMovement.insideCar = false;
 
             SelectedObject.transform.SetParent(null, true);
@@ -45,6 +45,9 @@ public class Interactible : MonoBehaviour
     }
     public void OnTriggerExit2D(Collider2D collision)
     {
-        carColider = false;
+        if (collision.CompareTag("Player"))
+        {
+            carColider = false;
+        }
     }
 }
